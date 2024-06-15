@@ -27,8 +27,8 @@ export const handler: RequestHandler<null, PaginationParams> = async function (
   const { page = 1, limit = 10 } = req.query as PaginationParams;
 
   const [tasks, totalTasks] = await Promise.all([
-    taskRepository.findTasks(page, limit),
-    taskRepository.countTasks(),
+    taskRepository.findTasks(page, limit, req.user!),
+    taskRepository.countTasks(req.user!),
   ]);
 
   const totalPages = Math.ceil(totalTasks / limit);

@@ -5,13 +5,17 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   BeforeInsert,
+  OneToMany,
+  JoinColumn,
 } from "typeorm";
 
 import * as bcrypt from "bcryptjs";
+import { Task } from "../task/task";
 
 export interface UserDTO {
   id: string;
   username: string;
+  tasks?: Task[];
 }
 
 @Entity("user")
@@ -35,6 +39,10 @@ export class User {
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
+
+  @OneToMany(() => Task, task => task.user)
+  @JoinColumn()
+  tasks!: Task[];
 
   toResultObject(): UserDTO {
     const { password, createdAt, updatedAt, ...resultObject } = this;

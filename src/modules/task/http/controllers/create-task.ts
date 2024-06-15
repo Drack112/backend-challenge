@@ -11,7 +11,7 @@ export const createTask: FastifyPlugin = async function (
   done,
 ): Promise<void> {
   instance.route({
-    method: "DELETE",
+    method: "POST",
     url: "/",
     schema,
     handler,
@@ -26,7 +26,7 @@ export const handler: RequestHandler<TaskCreateBody> = async function (
   const taskPayload = req.body;
   const taskRepository = new TaskRepository();
 
-  const task = await taskRepository.createTask({ ...taskPayload });
+  const task = await taskRepository.createTask({ ...taskPayload }, req.user!);
   return task;
 };
 

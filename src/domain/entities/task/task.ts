@@ -2,9 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { User } from "../user/user";
 
 export enum STATUS_TASK {
   PENDENTE = "Pendente",
@@ -17,6 +20,7 @@ export interface TaskDTO {
   title: string;
   description: string;
   status: STATUS_TASK;
+  user: User;
 }
 
 @Entity("task")
@@ -41,6 +45,10 @@ export class Task {
 
   @UpdateDateColumn()
   updatedAt!: Date;
+
+  @ManyToOne(() => User)
+  @JoinColumn()
+  user!: User;
 
   toResultObject(): TaskDTO {
     const { createdAt, updatedAt, ...resultObject } = this;
